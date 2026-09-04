@@ -62,6 +62,7 @@ const App: React.FC<Props> = ({ isGameMenuVisible, activePlayer }) => {
   if (isPlayerBankrupt && !isGameMenuVisible) {
     return (
       <AppWrapper>
+        {/* @ts-ignore */}
         <GlobalStyle />
         <GameOverScreen />
       </AppWrapper>
@@ -70,6 +71,7 @@ const App: React.FC<Props> = ({ isGameMenuVisible, activePlayer }) => {
 
   return (
     <AppWrapper>
+      {/* @ts-ignore */}
       <GlobalStyle />
       <Header />
       {isGameMenuVisible ? (

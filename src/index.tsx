@@ -6,6 +6,7 @@ import store from './store';
 
 ReactDOM.render(
   <React.StrictMode>
+    {/* @ts-ignore */}
     <Provider store={store}>
       <App />
     </Provider>
