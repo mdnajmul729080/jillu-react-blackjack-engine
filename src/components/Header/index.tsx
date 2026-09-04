@@ -1,29 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyledHeader, Title, MenuButton } from './style';
-import CombinedRootState from '../../types/CombinedRootState';
-import { setGameMenuVisibility } from '../../actions';
-import { GameAction } from '../../types/GameAction';
-import SerializedPlayer from '../../types/SerializedPlayer';
+import { StyledHeader, Title, HeaderActions, ResetButton } from './style';
+import { resetGame } from '../../actions';
 
 interface Props {
-  isMenuVisible: boolean;
-  setGameMenuVisibility: (isGameMenuVisible: boolean) => GameAction;
-  activePlayer: SerializedPlayer | null;
+  resetGame: (startingChips?: number) => void;
 }
 
-const Header: React.FC<Props> = ({ setGameMenuVisibility }) => {
+const Header: React.FC<Props> = ({ resetGame }) => {
   return (
     <StyledHeader>
-      <Title>React Blackjack</Title>
-      <MenuButton onClick={() => setGameMenuVisibility(true)} />
+      <Title>
+        <span>♠</span> Blackjack
+      </Title>
+      <HeaderActions>
+        <ResetButton onClick={() => resetGame(2000)} title="Reset game bankroll to $2,000">
+          Reset $2K
+        </ResetButton>
+      </HeaderActions>
     </StyledHeader>
   );
 };
 
-const mapStateToProps = (state: CombinedRootState) => ({
-  isMenuVisible: state.game.isGameMenuVisible,
-  activePlayer: state.player.activePlayer,
-});
+export default connect(null, { resetGame })(Header);
 
-export default connect(mapStateToProps, { setGameMenuVisibility })(Header);

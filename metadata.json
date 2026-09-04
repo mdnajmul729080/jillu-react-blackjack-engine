@@ -1,0 +1,6 @@
+{
+  "name": "React Blackjack",
+  "description": "A responsive Blackjack casino card game built with React, Redux, and celebratory win animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

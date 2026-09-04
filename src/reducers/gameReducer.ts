@@ -15,8 +15,8 @@ import {
 import GameState from '../types/GameState';
 
 const initialState: GameState = {
-  phase: GamePhase.Menu,
-  isGameMenuVisible: true,
+  phase: GamePhase.Betting,
+  isGameMenuVisible: false,
   trayAmount: 0,
   dealer: { hand: [], handValue: 0 },
 };

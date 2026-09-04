@@ -1,21 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Wrapper, Message } from './style';
-import { setGameMenuVisibility } from '../../actions';
-import { GameAction } from '../../types/GameAction';
+import { Wrapper, ModalCard, Message, SubMessage, ActionButton } from './style';
+import { rebuyChips } from '../../actions';
 
 interface Props {
-  setGameMenuVisibility: (isGameMenuVisible: boolean) => GameAction;
+  rebuyChips: (amount?: number) => void;
 }
 
-const GameOverMenu: React.FC<Props> = ({ setGameMenuVisibility }) => {
+const GameOverScreen: React.FC<Props> = ({ rebuyChips }) => {
   return (
-    <Wrapper onClick={() => setGameMenuVisibility(true)}>
-      <Message>Game Over</Message>
+    <Wrapper>
+      <ModalCard>
+        <Message>Out of Chips</Message>
+        <SubMessage>Your balance reached $0. Reload to continue playing!</SubMessage>
+        <ActionButton onClick={() => rebuyChips(1000)}>
+          + $1,000 Chips
+        </ActionButton>
+      </ModalCard>
     </Wrapper>
   );
 };
 
-export default connect(null, {
-  setGameMenuVisibility,
-})(GameOverMenu);
+export default connect(null, { rebuyChips })(GameOverScreen);
+

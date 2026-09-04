@@ -15,12 +15,36 @@ import SerializedPlayer from '../types/SerializedPlayer';
 
 let game: Game;
 
-export const startGame = (players: CreatedPlayer[]): AppThunk => (dispatch) => {
-  game = new Game(players);
+export const ensureGame = (startingChips = 2000): Game => {
+  if (!game) {
+    game = new Game([{ name: 'Player', startingChips }]);
+  }
+  return game;
+};
+
+export const startGame = (players?: CreatedPlayer[]): AppThunk => (dispatch) => {
+  if (players && players.length > 0) {
+    game = new Game(players);
+  } else {
+    game = new Game([{ name: 'Player', startingChips: 2000 }]);
+  }
   dispatch(setGamePhase(GamePhase.Betting));
   dispatch(setGameMenuVisibility(false));
   dispatch(setActivePlayer());
   dispatch(updateDealer());
+};
+
+export const resetGame = (startingChips = 2000): AppThunk => (dispatch) => {
+  dispatch(startGame([{ name: 'Player', startingChips }]));
+};
+
+export const rebuyChips = (amount = 1000): AppThunk => (dispatch) => {
+  const g = ensureGame();
+  const player = g.getPlayers()[0];
+  if (player) {
+    player.getStack().addChips(amount);
+    dispatch(update(player.serialize()));
+  }
 };
 
 export const setGameMenuVisibility = (
@@ -30,10 +54,13 @@ export const setGameMenuVisibility = (
   isGameMenuVisible,
 });
 
-export const setActivePlayer = (): PlayerAction => ({
-  type: SET_ACTIVE_PLAYER,
-  activePlayer: game.getSerializedActivePlayer(),
-});
+export const setActivePlayer = (): PlayerAction => {
+  const g = ensureGame();
+  return {
+    type: SET_ACTIVE_PLAYER,
+    activePlayer: g.getSerializedActivePlayer(),
+  };
+};
 
 export const setGamePhase = (phase: GamePhase): GameAction => ({
   type: SET_GAME_PHASE,
@@ -41,44 +68,50 @@ export const setGamePhase = (phase: GamePhase): GameAction => ({
 });
 
 export const update = (player: SerializedPlayer): AppThunk => (dispatch) => {
+  const g = ensureGame();
   dispatch({
     type: UPDATE_PLAYER,
     player,
   });
   dispatch(setActivePlayer());
-  if (game.getGamePhase() !== GamePhase.DealerHand) {
+  if (g.getGamePhase() !== GamePhase.DealerHand) {
     dispatch(updateDealer());
   }
-  dispatch(setGamePhase(game.getGamePhase()));
+  dispatch(setGamePhase(g.getGamePhase()));
 
-  if (game.getGamePhase() === GamePhase.Results) {
+  if (g.getGamePhase() === GamePhase.Results) {
     setTimeout(() => dispatch(startNewRound()), 3000);
   }
 };
 
 export const bet = (amount: number): AppThunk => (dispatch) => {
-  const bettingPlayer = game.bet(amount);
+  const g = ensureGame();
+  const bettingPlayer = g.bet(amount);
   dispatch(update(bettingPlayer));
 };
 
 export const hit = (): AppThunk => (dispatch) => {
-  const hittingPlayer = game.hit();
+  const g = ensureGame();
+  const hittingPlayer = g.hit();
   dispatch(update(hittingPlayer));
 };
 
 export const stand = (): AppThunk => (dispatch) => {
-  const standingPlayer = game.stand();
+  const g = ensureGame();
+  const standingPlayer = g.stand();
   dispatch(update(standingPlayer));
 };
 
 export const double = (): AppThunk => (dispatch) => {
-  const doublingPlayer = game.double();
+  const g = ensureGame();
+  const doublingPlayer = g.double();
   dispatch(update(doublingPlayer));
 };
 
 export const updateDealer = (): AppThunk => (dispatch) => {
-  const hand = game.getDealer().serializeHand();
-  const handValue = game.getDealer().getHandValue();
+  const g = ensureGame();
+  const hand = g.getDealer().serializeHand();
+  const handValue = g.getDealer().getHandValue();
 
   dispatch({
     type: UPDATE_DEALER_HAND,
@@ -87,11 +120,12 @@ export const updateDealer = (): AppThunk => (dispatch) => {
 };
 
 export const playDealerHand = (): AppThunk => (dispatch) => {
-  game.playDealerHand();
+  const g = ensureGame();
+  g.playDealerHand();
   dispatch(updateDealer());
   dispatch({
     type: UPDATE_PLAYER,
-    player: game.getSerializedActivePlayer(),
+    player: g.getSerializedActivePlayer(),
   });
 };
 
@@ -101,9 +135,10 @@ export const setTrayAmount = (trayAmount: number): GameAction => ({
 });
 
 export const startNewRound = (): AppThunk => (dispatch) => {
-  game.startNewRound();
+  const g = ensureGame();
+  g.startNewRound();
   dispatch(setTrayAmount(0));
-  dispatch(update(game.getSerializedActivePlayer()));
+  dispatch(update(g.getSerializedActivePlayer()));
 };
 
 export const saveGame = (): AppThunk => (dispatch) => {

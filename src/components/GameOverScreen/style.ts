@@ -1,28 +1,71 @@
 import styled from 'styled-components';
-import GameOverImage from '../../images/gameover.jpg';
 
 export const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(
-      to bottom,
-      rgba(33, 33, 33, 0.15),
-      rgba(33, 33, 33, 0.15)
-    ),
-    url(${GameOverImage});
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: 100%;
-  cursor: pointer;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  padding: 2rem;
 `;
 
-export const Message = styled.h1`
-  text-transform: uppercase;
-  color: #fff;
-  letter-spacing: 2px;
-  font-size: 4rem;
-  text-shadow: 0 1px 0 #000;
+export const ModalCard = styled.div`
+  background: linear-gradient(145deg, #1f2937, #111827);
+  border: 2px solid #e11d48;
+  border-radius: 16px;
+  padding: 2.4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  max-width: 320px;
+  width: 100%;
 `;
+
+export const Message = styled.h2`
+  text-transform: uppercase;
+  color: #fb7185;
+  letter-spacing: 2px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+`;
+
+export const SubMessage = styled.p`
+  color: #94a3b8;
+  font-size: 1.4rem;
+  margin-bottom: 2rem;
+`;
+
+export const ActionButton = styled.button`
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
